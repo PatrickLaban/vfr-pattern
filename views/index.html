@@ -14,10 +14,15 @@
     </div>
 </div>
 <script type="text/javascript">
+    var position;
     var getConditions = function () {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            $("#results-span").html("Latitude: " + position.coords.latitude +
-                    "<br>Longitude: " + position.coords.longitude);
+        navigator.geolocation.getCurrentPosition(function (geoposition) {
+            position = geoposition;
+            $("#results-span").html('<iframe width="600" height="450" frameborder="0" style="border:0"' +
+                    'src="https://www.google.com/maps/embed/v1/view?zoom=16&center=' + position.coords.latitude +
+                    ',' + position.coords.longitude + '&key=AIzaSyA4T1fjExOOzsCU87yozyK9vjqtiEOiLoU&maptype=satellite" ' +
+                    'allowfullscreen></iframe>');
+
         });
     };
 </script>
