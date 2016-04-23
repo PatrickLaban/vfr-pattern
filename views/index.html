@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
     <div class="row">
         <div class="col-md-12">
             <p>
@@ -8,7 +8,8 @@
                        onclick="getConditions()">
             </p>
             <p class="text-justify">
-                <span id="results-span"></span>
+                <span id="metar-span"></span></br>
+                <span id="map-span"></span></br>
             </p>
         </div>
     </div>
@@ -18,11 +19,26 @@
     var getConditions = function () {
         navigator.geolocation.getCurrentPosition(function (geoposition) {
             position = geoposition;
-            $("#results-span").html('<iframe width="600" height="450" frameborder="0" style="border:0"' +
+            $("#map-span").html('<iframe width="600" height="450" frameborder="0" style="border:0"' +
                     'src="https://www.google.com/maps/embed/v1/place?zoom=16&q=' + position.coords.latitude +
                     ',' + position.coords.longitude + '&key=AIzaSyA4T1fjExOOzsCU87yozyK9vjqtiEOiLoU&maptype=satellite" ' +
                     'allowfullscreen></iframe>');
-
+        });
+        showSpinner();
+        $.ajax({
+            type: "POST",
+            url: "/",
+            data: "",
+            dataType: "json",
+            success: function (response) {
+                hideSpinner();
+                if (response.success) {
+                    $("#metar-span").html("According to the last METAR conditions are " + response.condition +".");
+                } else {
+                    $("#error-message").html(response.error_message);
+                    $("#error-alert").removeClass("hidden");
+                }
+            }
         });
     };
 </script>
